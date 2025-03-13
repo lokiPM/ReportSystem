@@ -18,8 +18,18 @@ class Main extends PluginBase {
         return false;
     }
 
-    public function openReportForm(Player $player): void {
-        $form = new CustomForm(function (Player $player, ?array $data) {});
+    public function openReportForm(Player $player, ?string $error = null): void {
+        $form = new CustomForm(function (Player $player, ?array $data) {
+            if ($data === null) return; // Formular geschlossen
+
+            $selectedPlayer = $data[0];
+            $reason = $data[1];
+
+            if ($selectedPlayer === null || trim($reason) === "") {
+                $this->openReportForm($player, "Please fill every fields!");
+                return;
+            }
+        });
 
         $form->setTitle("Report a Player");
 
@@ -29,6 +39,12 @@ class Main extends PluginBase {
         }
 
         $form->addDropdown("Select a Player", $onlinePlayers);
+        $form->addInput("Reason", "Type in Reason");
+
+        if ($error !== null) {
+            $form->addLabel($error);
+        }
+
         $player->sendForm($form);
     }
 }

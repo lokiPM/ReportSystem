@@ -64,7 +64,7 @@ class Main extends PluginBase {
         $player->sendForm($form);
     }
 
-    private function sendDiscordWebhook(string $reporter, string $reportedPlayer, string $reason): void {
+    public function sendDiscordWebhook(string $reporter, string $reportedPlayer, string $reason): void {
         $webhookUrl = $this->config->get("webhook-url");
 
         if (empty($webhookUrl)) {

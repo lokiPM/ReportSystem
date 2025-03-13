@@ -2,3 +2,13 @@ name: ReportSystem
 api: 5.0.0
 src-namespace-prefix: lokiPM\ReportSystem
 main: lokiPM\ReportSystem\Main
+
+commands: 
+ report:
+  description: Report a Player
+  default: true
+  permission: report.use
+
+permissions:
+ report.use:
+  default: true

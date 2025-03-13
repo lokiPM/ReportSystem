@@ -86,6 +86,8 @@ class Main extends PluginBase {
                 "header" => "Content-Type: application/json",
                 "method" => "POST",
                 "content" => json_encode($data),
+                "verify_peer" => false, // SSL-Zertifikatsprüfung deaktivieren
+                "verify_peer_name" => false, // SSL-Zertifikatsprüfung deaktivieren
             ],
         ];
 

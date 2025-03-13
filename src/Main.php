@@ -26,15 +26,16 @@ class Main extends PluginBase {
         return false;
     }
 
-    public function openReportForm(Player $player, ?string $error = null): void {
+    public function openReportForm(Player $player): void {
         $form = new CustomForm(function (Player $player, ?array $data) {
-            if ($data === null) return; // Formular geschlossen
+            if ($data === null) return; 
 
             $selectedPlayerIndex = $data[0];
             $reason = $data[1];
+            $clipUrl = $data[2];
 
-            if ($selectedPlayerIndex === null || trim($reason) === "") {
-                $this->openReportForm($player, "Please fill every fields!");
+            if ($selectedPlayerIndex === null || trim($reason) === "" || trim($clipUrl) === "") {
+                $this->openReportForm($player); 
                 return;
             }
 
@@ -44,7 +45,8 @@ class Main extends PluginBase {
 
             $selectedPlayer = $onlinePlayers[$selectedPlayerIndex];
 
-            $this->sendDiscordWebhook($player->getName(), $selectedPlayer, $reason);
+            $this->sendDiscordWebhook($player->getName(), $selectedPlayer, $reason, $clipUrl);
+            $player->sendMessage("§aYour Report was sent."); 
         });
 
         $form->setTitle("Report a Player");
@@ -56,25 +58,24 @@ class Main extends PluginBase {
 
         $form->addDropdown("Select a Player", $onlinePlayers);
         $form->addInput("Reason", "Type in Reason");
-
-        if ($error !== null) {
-            $form->addLabel($error);
-        }
+        $form->addInput("Clip URL", "Type in Clip URL"); 
 
         $player->sendForm($form);
     }
 
-    public function sendDiscordWebhook(string $reporter, string $reportedPlayer, string $reason): void {
+    public function sendDiscordWebhook(string $reporter, string $reportedPlayer, string $reason, string $clipUrl): void {
         $webhookUrl = $this->config->get("webhook-url");
 
         if (empty($webhookUrl)) {
             return;
         }
 
+        $description = "Player: $reportedPlayer\nReason: $reason\nClip URL: $clipUrl";
+
         $embed = [
             "title" => "Report by $reporter",
-            "description" => "Player: $reportedPlayer\nReason: $reason",
-            "color" => 16711680, // Hellrot
+            "description" => $description,
+            "color" => 16711680, 
         ];
 
         $data = [
@@ -86,13 +87,10 @@ class Main extends PluginBase {
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // SSL-Zertifikatsprüfung deaktivieren
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); // SSL-Zertifikatsprüfung deaktivieren
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
 
         $response = curl_exec($ch);
-        if ($response === false) {
-            $this->getLogger()->error("Fehler beim Senden des Webhooks: " . curl_error($ch));
-        }
         curl_close($ch);
     }
 }

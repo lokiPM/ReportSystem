@@ -10,13 +10,6 @@ use jojoe77777\FormAPI\SimpleForm;
 
 class Main extends PluginBase {
 
-    public function onEnable(): void {
-        if ($this->getServer()->getPluginManager()->getPlugin("CustomSetting") !== null) {
-            $this->getServer()->getPluginManager()->disablePlugin($this);
-            return;
-        }
-    }
-
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {
         if ($command->getName() === "report" && $sender instanceof Player) {
             $this->openReportForm($sender);

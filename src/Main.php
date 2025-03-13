@@ -6,33 +6,22 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
-use pocketmine\form\Form;
-use pocketmine\form\ModalForm;
+use jojoe77777\FormAPI\SimpleForm;
 
 class Main extends PluginBase {
 
-    public function onEnable(): void {
-        $this->getLogger()->info("ReportSystem wurde aktiviert!");
-    }
-
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {
-        if ($command->getName() === "report") {
-            if ($sender instanceof Player) {
-                $this->openReportForm($sender);
-            } else {
-                $sender->sendMessage("Dieser Befehl kann nur im Spiel verwendet werden.");
-            }
+        if ($command->getName() === "report" && $sender instanceof Player) {
+            $this->openReportForm($sender);
             return true;
         }
         return false;
     }
 
     public function openReportForm(Player $player): void {
-        $form = new ModalForm(
-            "Report a Player",
-            "Soon",
-            function (Player $player, bool $data): void {}
-        );
+        $form = new SimpleForm(function (Player $player, ?int $data) {});
+        $form->setTitle("Report a Player");
+        $form->setContent("Soon");
         $player->sendForm($form);
     }
 }

@@ -6,10 +6,16 @@ main: lokiPM\ReportSystem\Main
 
 commands: 
  report:
-  description: Report a Player
+  description: Report a Player.
   default: true
   permission: report.use
+ reportreload:
+  description: Reload the Plugin.
+  default: op
+  permission: report.reload
 
 permissions:
  report.use:
   default: true
+ report.reload:
+  default: op

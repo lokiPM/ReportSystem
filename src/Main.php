@@ -14,13 +14,13 @@ class Main extends PluginBase {
 
     private $config;
     private $blacklist = [];
-    private $blacklistFile;
+    private $blacklistConfig;
 
     public function onEnable(): void {
         $this->saveResource("config.yml");
-        $this->saveResource("blacklist.txt");
+        $this->saveResource("blacklist.yml");
         $this->config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-        $this->blacklistFile = $this->getDataFolder() . "blacklist.txt";
+        $this->blacklistConfig = new Config($this->getDataFolder() . "blacklist.yml", Config::YAML);
 
         $this->updateBlacklist();
         $this->getScheduler()->scheduleRepeatingTask(new class($this) extends Task {
@@ -37,7 +37,7 @@ class Main extends PluginBase {
     }
 
     public function updateBlacklist(): void {
-        $this->blacklist = array_map('strtolower', array_filter(array_map('trim', file($this->blacklistFile))));
+        $this->blacklist = array_map('strtolower', $this->blacklistConfig->get("players", []));
     }
 
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {

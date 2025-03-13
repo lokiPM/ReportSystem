@@ -81,17 +81,18 @@ class Main extends PluginBase {
             "embeds" => [$embed],
         ];
 
-        $options = [
-            "http" => [
-                "header" => "Content-Type: application/json",
-                "method" => "POST",
-                "content" => json_encode($data),
-                "verify_peer" => false, // SSL-Zertifikatsprüfung deaktivieren
-                "verify_peer_name" => false, // SSL-Zertifikatsprüfung deaktivieren
-            ],
-        ];
+        $ch = curl_init($webhookUrl);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // SSL-Zertifikatsprüfung deaktivieren
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); // SSL-Zertifikatsprüfung deaktivieren
 
-        $context = stream_context_create($options);
-        file_get_contents($webhookUrl, false, $context);
+        $response = curl_exec($ch);
+        if ($response === false) {
+            $this->getLogger()->error("Fehler beim Senden des Webhooks: " . curl_error($ch));
+        }
+        curl_close($ch);
     }
 }

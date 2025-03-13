@@ -13,7 +13,7 @@ use pocketmine\scheduler\Task;
 class Main extends PluginBase {
 
     private $config;
-    private $blacklist = [];
+    public $blacklist = [];
     public $blacklistConfig;
 
     public function onEnable(): void {

@@ -97,11 +97,9 @@ class Main extends PluginBase {
             return;
         }
 
-        $description = "Player: $reportedPlayer\nReason: $reason\nClip URL: $clipUrl";
-
         $embed = [
             "title" => "Report by $reporter",
-            "description" => $description,
+            "description" => "Player: $reportedPlayer\nReason: $reason\nClip URL: $clipUrl",
             "color" => 16711680,
         ];
 

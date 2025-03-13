@@ -21,35 +21,41 @@ class Main extends PluginBase {
         $this->saveResource("blacklist.yml");
         $this->config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
         $this->blacklistConfig = new Config($this->getDataFolder() . "blacklist.yml", Config::YAML);
-
-        $this->updateBlacklist();
+        $this->blacklist = array_map('strtolower', $this->blacklistConfig->get("players", []));
         $this->getScheduler()->scheduleRepeatingTask(new class($this) extends Task {
             private $plugin;
-
             public function __construct(Main $plugin) {
                 $this->plugin = $plugin;
             }
-
             public function onRun(): void {
-                $this->plugin->updateBlacklist();
+                $this->plugin->blacklist = array_map('strtolower', $this->plugin->blacklistConfig->get("players", []));
             }
-        }, 1); // Blacklist jede Millisekunde (1 Tick) aktualisieren
-    }
-
-    public function updateBlacklist(): void {
-        $this->blacklist = array_map('strtolower', $this->blacklistConfig->get("players", []));
+        }, 1);
     }
 
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {
-        if ($command->getName() === "report" && $sender instanceof Player) {
-            $playerName = strtolower($sender->getName());
-            if (in_array($playerName, $this->blacklist)) {
-                $sender->sendMessage("§cYou are blacklisted.");
+        if ($command->getName() === "report") {
+            if ($sender instanceof Player) {
+                $playerName = strtolower($sender->getName());
+                if (in_array($playerName, $this->blacklist)) {
+                    $sender->sendMessage("§cYou are blacklisted.");
+                    return true;
+                }
+                $this->openReportForm($sender);
                 return true;
             }
-            $this->openReportForm($sender);
+            return false;
+        }
+
+        if ($command->getName() === "reportreload") {
+            if (!$sender->hasPermission("report.reload")) {
+                return true;
+            }
+            $this->reloadPlugin();
+            $sender->sendMessage("§aDone!");
             return true;
         }
+
         return false;
     }
 
@@ -117,5 +123,11 @@ class Main extends PluginBase {
 
         $response = curl_exec($ch);
         curl_close($ch);
+    }
+
+    public function reloadPlugin(): void {
+        $this->reloadConfig();
+        $this->blacklistConfig->reload();
+        $this->blacklist = array_map('strtolower', $this->blacklistConfig->get("players", []));
     }
 }

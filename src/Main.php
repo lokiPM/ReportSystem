@@ -33,7 +33,7 @@ class Main extends PluginBase {
             public function onRun(): void {
                 $this->plugin->updateBlacklist();
             }
-        }, 20);
+        }, 1); // Blacklist jede Millisekunde (1 Tick) aktualisieren
     }
 
     public function updateBlacklist(): void {

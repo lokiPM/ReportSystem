@@ -1,4 +1,5 @@
 name: ReportSystem
+version: 1.0.0
 api: 5.0.0
 src-namespace-prefix: lokiPM\ReportSystem
 main: lokiPM\ReportSystem\Main

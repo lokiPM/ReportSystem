@@ -22,7 +22,6 @@ class Main extends PluginBase {
         $form = new CustomForm(function (Player $player, ?array $data) {});
 
         $form->setTitle("Report a Player");
-        $form->addLabel("Player");
 
         $onlinePlayers = [];
         foreach ($this->getServer()->getOnlinePlayers() as $onlinePlayer) {

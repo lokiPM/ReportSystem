@@ -28,7 +28,7 @@ class Main extends PluginBase {
 
     public function openReportForm(Player $player, ?string $error = null): void {
         $form = new CustomForm(function (Player $player, ?array $data) {
-            if ($data === null) return; 
+            if ($data === null) return; // Formular geschlossen
 
             $selectedPlayerIndex = $data[0];
             $reason = $data[1];
@@ -74,7 +74,7 @@ class Main extends PluginBase {
         $embed = [
             "title" => "Report by $reporter",
             "description" => "Player: $reportedPlayer\nReason: $reason",
-            "color" => 16711680,
+            "color" => 16711680, // Hellrot
         ];
 
         $data = [

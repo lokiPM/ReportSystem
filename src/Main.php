@@ -14,7 +14,7 @@ class Main extends PluginBase {
 
     private $config;
     private $blacklist = [];
-    private $blacklistConfig;
+    public $blacklistConfig;
 
     public function onEnable(): void {
         $this->saveResource("config.yml");

@@ -71,8 +71,7 @@ class Main extends PluginBase {
 
             // Überprüfen, ob alle Felder ausgefüllt sind
             if ($selectedPlayerIndex === null || trim($reason) === "" || trim($clipUrl) === "") {
-                $player->sendMessage("§cPlease fill out all fields.");
-                $this->openReportForm($player); // Formular erneut öffnen
+                $this->openReportForm($player); // Formular erneut öffnen, ohne Nachricht
                 return;
             }
 

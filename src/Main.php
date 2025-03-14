@@ -80,7 +80,7 @@ class Main extends PluginBase {
 
             $selectedPlayer = $onlinePlayers[$selectedPlayerIndex];
             $this->sendDiscordWebhook($player->getName(), $selectedPlayer, $reason, $clipUrl);
-            $player->sendMessage("§aDone! Your report has been sent.");
+            $player->sendMessage("§aYour report has been sent.");
         });
 
         $form->setTitle("Report a Player");

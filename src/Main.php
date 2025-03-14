@@ -62,20 +62,18 @@ class Main extends PluginBase {
     public function openReportForm(Player $player): void {
         $form = new CustomForm(function (Player $player, ?array $data) {
             if ($data === null) {
-                return; // Formular geschlossen, ignoriere
-            }
-
-            $selectedPlayerIndex = $data[1];
-            $reason = $data[2];
-            $clipUrl = $data[3];
-
-            // Überprüfen, ob alle Felder ausgefüllt sind
-            if ($selectedPlayerIndex === null || trim($reason) === "" || trim($clipUrl) === "") {
-                $this->openReportForm($player); // Formular erneut öffnen, ohne Nachricht
                 return;
             }
 
-            // Webhook senden
+            $selectedPlayerIndex = $data[2];
+            $reason = $data[3];
+            $clipUrl = $data[4];
+
+            if (trim($reason) === "" || trim($clipUrl) === "") {
+                $this->openReportForm($player);
+                return;
+            }
+
             $onlinePlayers = array_values(array_map(function (Player $player) {
                 return $player->getName();
             }, $this->getServer()->getOnlinePlayers()));

@@ -61,31 +61,35 @@ class Main extends PluginBase {
 
     public function openReportForm(Player $player): void {
         $form = new CustomForm(function (Player $player, ?array $data) {
-            if ($data === null) return;
+            if ($data === null) {
+                return; // Formular geschlossen, ignoriere
+            }
 
             $selectedPlayerIndex = $data[1];
             $reason = $data[2];
             $clipUrl = $data[3];
 
+            // Überprüfen, ob alle Felder ausgefüllt sind
             if ($selectedPlayerIndex === null || trim($reason) === "" || trim($clipUrl) === "") {
-                $this->openReportForm($player);
+                $player->sendMessage("§cPlease fill out all fields.");
+                $this->openReportForm($player); // Formular erneut öffnen
                 return;
             }
 
+            // Webhook senden
             $onlinePlayers = array_values(array_map(function (Player $player) {
                 return $player->getName();
             }, $this->getServer()->getOnlinePlayers()));
 
             $selectedPlayer = $onlinePlayers[$selectedPlayerIndex];
-
             $this->sendDiscordWebhook($player->getName(), $selectedPlayer, $reason, $clipUrl);
-            $player->sendMessage("§aYour Report was sent.");
+            $player->sendMessage("§aDone! Your report has been sent.");
         });
 
         $form->setTitle("Report a Player");
 
-        $form->addLabel("§cUse this Website for Clips: https://jumpshare.com/file-sharing/video");
-        $form->addLabel("");
+        $form->addLabel("§cUse this Website for Clips:");
+        $form->addLabel("§ehttps://jumpshare.com/file-sharing/video");
 
         $onlinePlayers = [];
         foreach ($this->getServer()->getOnlinePlayers() as $onlinePlayer) {

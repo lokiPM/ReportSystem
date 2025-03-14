@@ -63,9 +63,9 @@ class Main extends PluginBase {
         $form = new CustomForm(function (Player $player, ?array $data) {
             if ($data === null) return;
 
-            $selectedPlayerIndex = $data[0];
-            $reason = $data[1];
-            $clipUrl = $data[2];
+            $selectedPlayerIndex = $data[1];
+            $reason = $data[2];
+            $clipUrl = $data[3];
 
             if ($selectedPlayerIndex === null || trim($reason) === "" || trim($clipUrl) === "") {
                 $this->openReportForm($player);
@@ -83,6 +83,9 @@ class Main extends PluginBase {
         });
 
         $form->setTitle("Report a Player");
+
+        $form->addLabel("§cUse this Website for Clips: https://jumpshare.com/file-sharing/video");
+        $form->addLabel("");
 
         $onlinePlayers = [];
         foreach ($this->getServer()->getOnlinePlayers() as $onlinePlayer) {

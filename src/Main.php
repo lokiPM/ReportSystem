@@ -79,6 +79,12 @@ class Main extends PluginBase {
             }, $this->getServer()->getOnlinePlayers()));
 
             $selectedPlayer = $onlinePlayers[$selectedPlayerIndex];
+
+            if ($selectedPlayer === $player->getName()) {
+                $player->sendMessage("§cYou can't report yourself.");
+                return;
+            }
+
             $this->sendDiscordWebhook($player->getName(), $selectedPlayer, $reason, $clipUrl);
             $player->sendMessage("§aYour report has been sent.");
         });
